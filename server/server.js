@@ -1,15 +1,27 @@
 const express = require("express");
 const fs = require("fs");
-const { ApolloServer } = require("apollo-server-express");
-const { GraphQLScalarType } = require('graphql')
+const { ApolloServer, UserInputError } = require("apollo-server-express");
+const { GraphQLScalarType } = require("graphql");
+const { Kind } = require("graphql/language");
 
 const GraphQLDate = new GraphQLScalarType({
-  name: 'GraphQLDate',
-  description: 'A Date() type in GraphQL as a scalar',
+  name: "GraphQLDate",
+  description: "A Date() type in GraphQL as a scalar",
   serialize(value) {
     return value.toISOString();
-  }
-})
+  },
+
+  parseLiteral(ast) {
+    if (ast.kind == Kind.STRING) {
+      const value = new Date(ast.value);
+      return isNaN(value) ? undefined : value;
+    }
+  },
+  parseValue(value) {
+    const dateValue = new Date(value);
+    return isNaN(dateValue) ? undefined : value;
+  },
+});
 
 let aboutMessage = "Issue Tracker API V1.0";
 
@@ -34,6 +46,21 @@ const issuesDB = [
   },
 ];
 
+function issueValidate(issue) {
+  const errors = [];
+  if (issue.title.length < 3) {
+    errors.push('Field "title" must be at least 3 characters long.');
+  }
+
+  if (issue.status == "Assigned" && !issue.owner) {
+    errors.push('Field "owner" is required when status is "Assigned"');
+  }
+
+  if (errors.length > 0) {
+    throw new UserInputError("Invalid input(s)", { errors });
+  }
+}
+
 const resolvers = {
   Query: {
     about: () => aboutMessage,
@@ -41,8 +68,9 @@ const resolvers = {
   },
   Mutation: {
     setAboutMessage,
+    issueAdd,
   },
-  GraphQLDate
+  GraphQLDate,
 };
 
 function setAboutMessage(_, { message }) {
@@ -53,9 +81,22 @@ function issueList() {
   return issuesDB;
 }
 
+function issueAdd(_, { issue }) {
+  issueValidate(issue);
+  issue.created = new Date();
+  issue.id = issuesDB.length + 1;
+  issuesDB.push(issue);
+  console.log(issue);
+  return issue;
+}
+
 const server = new ApolloServer({
   typeDefs: fs.readFileSync("./server/schema.graphql", "utf-8"),
   resolvers,
+  formatError: (error) => {
+    console.log(error);
+    return error;
+  },
 });
 
 const app = express();
