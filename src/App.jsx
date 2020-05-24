@@ -37,9 +37,8 @@ async function graphQLFetch(query, variables = {}) {
       } else {
         alert(`${error.extensions.code}: ${error.message}`);
       }
-
-      return result.date;
     }
+    return result.data; 
   } catch (e) {
     alert(`Error in sending data to server: ${e.message}`);
   }
@@ -157,7 +156,9 @@ class IssueList extends React.Component {
     }`;
 
     const data = await graphQLFetch(query);
+    console.log(data);
     if (data) {
+      console.log(data);
       this.setState({ issues: data.issueList });
     }
   }

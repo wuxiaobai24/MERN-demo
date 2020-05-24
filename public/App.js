@@ -84,37 +84,30 @@ function _graphQLFetch() {
             body = _context3.sent;
             result = JSON.parse(body, jsonDateReviver);
 
-            if (!result.errors) {
-              _context3.next = 13;
-              break;
+            if (result.errors) {
+              error = result.errors[0];
+
+              if (error.extensions.code === "BAD_UERS_INPUT") {
+                details = error.extensions.exception.errors.join("\n");
+                alert("".concat(error.message, ":\n").concat(details));
+              } else {
+                alert("".concat(error.extensions.code, ": ").concat(error.message));
+              }
             }
 
-            error = result.errors[0];
-
-            if (error.extensions.code === "BAD_UERS_INPUT") {
-              details = error.extensions.exception.errors.join("\n");
-              alert("".concat(error.message, ":\n").concat(details));
-            } else {
-              alert("".concat(error.extensions.code, ": ").concat(error.message));
-            }
-
-            return _context3.abrupt("return", result.date);
+            return _context3.abrupt("return", result.data);
 
           case 13:
-            _context3.next = 18;
-            break;
-
-          case 15:
-            _context3.prev = 15;
+            _context3.prev = 13;
             _context3.t0 = _context3["catch"](1);
             alert("Error in sending data to server: ".concat(_context3.t0.message));
 
-          case 18:
+          case 16:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[1, 15]]);
+    }, _callee3, null, [[1, 13]]);
   }));
   return _graphQLFetch.apply(this, arguments);
 }
@@ -284,14 +277,16 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
 
               case 3:
                 data = _context2.sent;
+                console.log(data);
 
                 if (data) {
+                  console.log(data);
                   this.setState({
                     issues: data.issueList
                   });
                 }
 
-              case 5:
+              case 6:
               case "end":
                 return _context2.stop();
             }
