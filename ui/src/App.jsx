@@ -20,7 +20,7 @@ function jsonDateReviver(key, value) {
 
 async function graphQLFetch(query, variables = {}) {
   try {
-    const response = await fetch("/graphql", {
+    const response = await fetch("http://localhost:3000/graphql", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
@@ -38,7 +38,7 @@ async function graphQLFetch(query, variables = {}) {
         alert(`${error.extensions.code}: ${error.message}`);
       }
     }
-    return result.data; 
+    return result.data;
   } catch (e) {
     alert(`Error in sending data to server: ${e.message}`);
   }
