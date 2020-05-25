@@ -5,6 +5,13 @@ const { GraphQLScalarType } = require("graphql");
 const { Kind } = require("graphql/language");
 const { MongoClient } = require("mongodb");
 
+// load .env
+require("dotenv").config();
+const url = process.env.DB_URL || "mongodb://localhost/issuetracker";
+const port = process.env.API_SERVER_PORT || 3000;
+const enableCors = (process.env.ENABLE_CORS || "true") === "true";
+console.log("CORS setting:", enableCors);
+
 const GraphQLDate = new GraphQLScalarType({
   name: "GraphQLDate",
   description: "A Date() type in GraphQL as a scalar",
@@ -25,8 +32,6 @@ const GraphQLDate = new GraphQLScalarType({
 });
 
 let aboutMessage = "Issue Tracker API V1.0";
-
-const url = "mongodb://localhost/issuetracker";
 let db;
 
 function issueValidate(issue) {
@@ -86,7 +91,7 @@ async function issueAdd(_, { issue }) {
   const saveIssue = await db
     .collection("issues")
     .findOne({ _id: result.insertedId });
-  console.log(saveIssue)
+  console.log(saveIssue);
   return saveIssue;
 }
 
@@ -101,7 +106,7 @@ const server = new ApolloServer({
 
 const app = express();
 
-server.applyMiddleware({ app, path: "/graphql" });
+server.applyMiddleware({ app, path: "/graphql", cors: enableCors });
 
 async function connectToDb() {
   const client = new MongoClient(url, { useNewUrlParser: true });
@@ -113,8 +118,8 @@ async function connectToDb() {
 (async function () {
   try {
     await connectToDb();
-    app.listen(3000, function () {
-      console.log("API server started on port 3000");
+    app.listen(port, function () {
+      console.log(`API server started on port ${port}`);
     });
   } catch (err) {
     console.log("ERROR:", err);
