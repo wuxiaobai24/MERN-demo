@@ -1,20 +1,20 @@
-const express = require("express");
-const fs = require("fs");
-const { ApolloServer, UserInputError } = require("apollo-server-express");
-const { GraphQLScalarType } = require("graphql");
-const { Kind } = require("graphql/language");
-const { MongoClient } = require("mongodb");
+const express = require('express');
+const fs = require('fs');
+const { ApolloServer, UserInputError } = require('apollo-server-express');
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
+const { MongoClient } = require('mongodb');
 
 // load .env
-require("dotenv").config();
-const url = process.env.DB_URL || "mongodb://localhost/issuetracker";
+require('dotenv').config();
+const url = process.env.DB_URL || 'mongodb://localhost/issuetracker';
 const port = process.env.API_SERVER_PORT || 3000;
-const enableCors = (process.env.ENABLE_CORS || "true") === "true";
-console.log("CORS setting:", enableCors);
+const enableCors = (process.env.ENABLE_CORS || 'true') === 'true';
+console.log('CORS setting:', enableCors);
 
 const GraphQLDate = new GraphQLScalarType({
-  name: "GraphQLDate",
-  description: "A Date() type in GraphQL as a scalar",
+  name: 'GraphQLDate',
+  description: 'A Date() type in GraphQL as a scalar',
   serialize(value) {
     return value.toISOString();
   },
@@ -31,7 +31,7 @@ const GraphQLDate = new GraphQLScalarType({
   },
 });
 
-let aboutMessage = "Issue Tracker API V1.0";
+let aboutMessage = 'Issue Tracker API V1.0';
 let db;
 
 function issueValidate(issue) {
@@ -40,12 +40,12 @@ function issueValidate(issue) {
     errors.push('Field "title" must be at least 3 characters long.');
   }
 
-  if (issue.status == "Assigned" && !issue.owner) {
+  if (issue.status == 'Assigned' && !issue.owner) {
     errors.push('Field "owner" is required when status is "Assigned"');
   }
 
   if (errors.length > 0) {
-    throw new UserInputError("Invalid input(s)", { errors });
+    throw new UserInputError('Invalid input(s)', { errors });
   }
 }
 
@@ -66,14 +66,14 @@ function setAboutMessage(_, { message }) {
 }
 
 async function issueList() {
-  const issues = await db.collection("issues").find({}).toArray();
+  const issues = await db.collection('issues').find({}).toArray();
   console.log(issues);
   return issues;
 }
 
 async function getNextSequence(name) {
   const result = await db
-    .collection("counters")
+    .collection('counters')
     .findOneAndUpdate(
       { _id: name },
       { $inc: { current: 1 } },
@@ -86,17 +86,17 @@ async function issueAdd(_, { issue }) {
   console.log(issue);
   issueValidate(issue);
   issue.created = new Date();
-  issue.id = await getNextSequence("issues");
-  const result = await db.collection("issues").insertOne(issue);
+  issue.id = await getNextSequence('issues');
+  const result = await db.collection('issues').insertOne(issue);
   const saveIssue = await db
-    .collection("issues")
+    .collection('issues')
     .findOne({ _id: result.insertedId });
   console.log(saveIssue);
   return saveIssue;
 }
 
 const server = new ApolloServer({
-  typeDefs: fs.readFileSync("schema.graphql", "utf-8"),
+  typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
   resolvers,
   formatError: (error) => {
     console.log(error);
@@ -106,12 +106,12 @@ const server = new ApolloServer({
 
 const app = express();
 
-server.applyMiddleware({ app, path: "/graphql", cors: enableCors });
+server.applyMiddleware({ app, path: '/graphql', cors: enableCors });
 
 async function connectToDb() {
   const client = new MongoClient(url, { useNewUrlParser: true });
   await client.connect();
-  console.log("Connect to MongoDB at", url);
+  console.log('Connect to MongoDB at', url);
   db = client.db();
 }
 
@@ -122,6 +122,6 @@ async function connectToDb() {
       console.log(`API server started on port ${port}`);
     });
   } catch (err) {
-    console.log("ERROR:", err);
+    console.log('ERROR:', err);
   }
 })();

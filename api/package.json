@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -e js,graphql server.js"
+    "start": "nodemon -e js,graphql server.js",
+    "lint": "eslint ."
   },
   "author": "wuxiaobai24",
   "license": "ISC",
@@ -16,5 +17,10 @@
     "graphql": "^15.0.0",
     "mongodb": "^3.5.7",
     "nodemon": "^1.19.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2"
   }
 }
