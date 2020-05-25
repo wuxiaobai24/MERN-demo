@@ -1,5 +1,13 @@
 "use strict";
 
+var _graphQLFetch = _interopRequireDefault(require("./graphQLFetch"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22,94 +30,15 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function HelloWorld() {
-  var continents = ["Africa", "America", "Asia", "Australia", "Europe"];
+  var continents = ['Africa', 'America', 'Asia', 'Australia', 'Europe'];
   var helloContinents = Array.from(continents, function (c) {
     return "Hello ".concat(c, "!");
   });
-  var message = helloContinents.join(" ");
+  var message = helloContinents.join(' ');
   return /*#__PURE__*/React.createElement("div", {
     title: "Outer div"
   }, /*#__PURE__*/React.createElement("h1", null, "Hello World!"), /*#__PURE__*/React.createElement("h1", null, message));
-}
-
-var dateReges = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
-
-function jsonDateReviver(key, value) {
-  if (dateReges.test(value)) return new Date(value);
-  return value;
-}
-
-function graphQLFetch(_x) {
-  return _graphQLFetch.apply(this, arguments);
-}
-
-function _graphQLFetch() {
-  _graphQLFetch = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(query) {
-    var variables,
-        response,
-        body,
-        result,
-        error,
-        details,
-        _args3 = arguments;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            variables = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
-            _context3.prev = 1;
-            _context3.next = 4;
-            return fetch(window.ENV.UI_API_ENDPOINT, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                query: query,
-                variables: variables
-              })
-            });
-
-          case 4:
-            response = _context3.sent;
-            _context3.next = 7;
-            return response.text();
-
-          case 7:
-            body = _context3.sent;
-            result = JSON.parse(body, jsonDateReviver);
-
-            if (result.errors) {
-              error = result.errors[0];
-
-              if (error.extensions.code === "BAD_UERS_INPUT") {
-                details = error.extensions.exception.errors.join("\n");
-                alert("".concat(error.message, ":\n").concat(details));
-              } else {
-                alert("".concat(error.extensions.code, ": ").concat(error.message));
-              }
-            }
-
-            return _context3.abrupt("return", result.data);
-
-          case 13:
-            _context3.prev = 13;
-            _context3.t0 = _context3["catch"](1);
-            alert("Error in sending data to server: ".concat(_context3.t0.message));
-
-          case 16:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, null, [[1, 13]]);
-  }));
-  return _graphQLFetch.apply(this, arguments);
 }
 
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
@@ -135,13 +64,13 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
 
 function IssueRow(props) {
   var issue = props.issue;
-  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : " "), /*#__PURE__*/React.createElement("td", null, issue.title));
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ' '), /*#__PURE__*/React.createElement("td", null, issue.title));
 }
 
 var sampleIssue = {
-  status: "New",
-  owner: "Pieta",
-  title: "Completion date should be optional"
+  status: 'New',
+  owner: 'Pieta',
+  title: 'Completion date should be optional'
 };
 
 function IssueTable(props) {
@@ -153,7 +82,7 @@ function IssueTable(props) {
   });
   return /*#__PURE__*/React.createElement("table", {
     style: {
-      borderCollapse: "collapse"
+      borderCollapse: 'collapse'
     }
   }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Status"), /*#__PURE__*/React.createElement("th", null, "Owner"), /*#__PURE__*/React.createElement("th", null, "Created"), /*#__PURE__*/React.createElement("th", null, "Effort"), /*#__PURE__*/React.createElement("th", null, "Due Date"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, issueRow));
 }
@@ -200,8 +129,8 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
         due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10)
       };
       this.props.createIssue(issue);
-      form.owner.value = "";
-      form.title.value = "";
+      form.owner.value = '';
+      form.title.value = '';
     }
   }]);
 
@@ -237,7 +166,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
               case 0:
                 query = "mutation issueAdd($issue: IssueInputs!) {\n      issueAdd(issue: $issue) {\n        id\n      }\n    }";
                 _context.next = 3;
-                return graphQLFetch(query, {
+                return (0, _graphQLFetch.default)(query, {
                   issue: issue
                 });
 
@@ -256,7 +185,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
         }, _callee, this);
       }));
 
-      function createIssue(_x2) {
+      function createIssue(_x) {
         return _createIssue.apply(this, arguments);
       }
 
@@ -273,7 +202,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
               case 0:
                 query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        created\n        effort\n        due\n      }\n    }";
                 _context2.next = 3;
-                return graphQLFetch(query);
+                return (0, _graphQLFetch.default)(query);
 
               case 3:
                 data = _context2.sent;
@@ -320,4 +249,4 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
 }(React.Component);
 
 var element = /*#__PURE__*/React.createElement(IssueList, null);
-ReactDOM.render(element, document.getElementById("content"));
+ReactDOM.render(element, document.getElementById('content'));
