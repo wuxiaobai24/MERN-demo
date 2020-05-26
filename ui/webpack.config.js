@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack')
+const webpack = require('webpack');
 require('dotenv').config();
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'public'),
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -28,6 +29,6 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       __UI_API_ENDPOINT__: `'${process.env.UI_API_ENDPOINT}'`,
-    })
-  ]
+    }),
+  ],
 };

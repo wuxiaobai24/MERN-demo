@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 
-function IssueRow(props) {
-  const issue = props.issue;
+const IssueRow = withRouter(({ issue, location: { search } }) => {
+  const selectLocation = { pathname: `/issues/${issue.id}`, search };
   return (
     <tr>
       <td>{issue.id}</td>
@@ -11,9 +12,14 @@ function IssueRow(props) {
       <td>{issue.effort}</td>
       <td>{issue.due ? issue.due.toDateString() : ' '}</td>
       <td>{issue.title}</td>
+      <td>
+        <Link to={`/edit/${issue.id}`}>Edit</Link>
+        {' | '}
+        <NavLink to={selectLocation}>Select</NavLink>
+      </td>
     </tr>
   );
-}
+});
 
 function IssueTable(props) {
   const issueRow = props.issues.map((issue) => (
@@ -30,6 +36,7 @@ function IssueTable(props) {
           <th>Effort</th>
           <th>Due Date</th>
           <th>Title</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>{issueRow}</tbody>

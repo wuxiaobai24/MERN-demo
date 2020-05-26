@@ -21,6 +21,8 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "url-search-params": "^1.1.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {

@@ -39,6 +39,10 @@ if (enableHMR && process.env.NODE_ENV !== 'production') {
 // app.get('/env.js', function (req, res) {
 //   res.send(`window.ENV = ${JSON.stringify(env)}`);
 // });
+const path = require('path');
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('public/index.html'));
+});
 
 app.use(express.static('public'));
 

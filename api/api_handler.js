@@ -1,18 +1,18 @@
-
 const fs = require('fs');
 
-const { ApolloServer} = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 
 const GraphQLDate = require('./graphql_date');
 const about = require('./about');
-const issue = require('./issue')
+const issue = require('./issue');
 
-require('dotenv').config()
+require('dotenv').config();
 
 const resolvers = {
   Query: {
     about: about.getMessage,
     issueList: issue.list,
+    issue: issue.get,
   },
   Mutation: {
     setAboutMessage: about.setMessage,
@@ -31,9 +31,9 @@ const server = new ApolloServer({
 });
 
 function installHandler(app) {
-	const enableCors = (process.env.ENABLE_CORS || 'true') === 'true';
-	console.log('CORS setting:', enableCors);
-	server.applyMiddleware({ app, path: '/graphql', cors: enableCors });
+  const enableCors = (process.env.ENABLE_CORS || 'true') === 'true';
+  console.log('CORS setting:', enableCors);
+  server.applyMiddleware({ app, path: '/graphql', cors: enableCors });
 }
 
-module.exports = { installHandler }
+module.exports = { installHandler };
